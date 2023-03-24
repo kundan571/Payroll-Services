@@ -1,0 +1,268 @@
+UC-1
+Ability to create a payroll
+service database
+- Using MSSQL Client use create database
+query to create a payroll_service
+database
+- Also you can see the DB created by
+using show database query
+- And go to the database created by using
+use payroll_service query
+
+
+mysql> create database payroll_service;
+Query OK, 1 row affected (0.04 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| employee           |
+| information_schema |
+| kundan             |
+| kundanschool       |
+| mysql              |
+| payroll_service    |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+10 rows in set (0.00 sec)
+
+UC-2:-
+Ability to create a employee payroll table
+in the payroll service database to
+manage employee payrolls
+- Use payroll_service database in MSSQL Client
+- Use Create Table employee_payroll Query
+to create employee payroll table with columns id,
+name, salary and start date as column. Note Id is set to
+auto increment.
+- Understand the SQL data types to be used for the
+table
+- Note: SQL Queries as case insensitive
+
+mysql> use payroll_service;
+Database changed
+mysql> select database();
++-----------------+
+| database()      |
++-----------------+
+| payroll_service |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> create table employee_payroll(empid int auto_increment primary key,name varchar(100),salary int,start_Date DATE);
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> describe employee_payroll;
++------------+--------------+------+-----+---------+----------------+
+| Field      | Type         | Null | Key | Default | Extra          |
++------------+--------------+------+-----+---------+----------------+
+| empid      | int          | NO   | PRI | NULL    | auto_increment |
+| name       | varchar(100) | YES  |     | NULL    |                |
+| salary     | int          | YES  |     | NULL    |                |
+| start_Date | date         | YES  |     | NULL    |                |
++------------+--------------+------+-----+---------+----------------+
+4 rows in set (0.04 sec)
+
+UC-3:-
+
+Ability to create employee
+payroll data in the payroll
+service database as part of
+CRUD Operation - Use payroll_service database in
+MSSQL Client
+- Use INSERT INTO employee_payroll
+Query to create employees payroll
+data into the employee_payroll table
+
+
+mysql> INSERT INTO employee_payroll(name,salary,start_date) values('kundan',600000,'2023-03-28'), ('satya',500000,'2023-03-25'), ('shubham',400000,'2023-03-24');
+Query OK, 3 rows affected (0.03 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+UC-4:-
+
+Ability to retrieve all the
+employee payroll data that is
+added to payroll service
+database
+- Use payroll_service database in MSSQL
+Client
+- Use SELECT * FROM employee_payroll to
+retrieve all the data from the
+employee_payroll table
+
+mysql> select * from employee_payroll;
++-------+---------+--------+------------+
+| empid | name    | salary | start_Date |
++-------+---------+--------+------------+
+|     1 | kundan  | 600000 | 2023-03-28 |
+|     2 | satya   | 500000 | 2023-03-25 |
+|     3 | shubham | 400000 | 2023-03-24 |
++-------+---------+--------+------------+
+3 rows in set (0.02 sec)
+
+UC-5:-
+
+Ability to retrieve salary data for a particular
+employee as well as all employees who have
+joined in a particular data range from the
+payroll service database
+- Use SELECT salary FROM employee_payroll
+WHERE name = 'Bill’ Query to View Bill’s salary
+- Use Select query with Where condition View employees
+between start dates
+- Query: WHERE start BETWEEN CAST('2018-01-01'
+AS DATE) AND DATE(NOW());
+- Note: Where Condition Clause is used to retrieve the row needed
+from the table
+- Note: Use of Database Functions like CAST() and NOW() in the
+Query
+
+
+mysql> select salary from employee_payroll where name = "kundan";
++--------+
+| salary |
++--------+
+| 600000 |
++--------+
+1 row in set (0.02 sec)
+
+mysql> select * from employee_payroll where cast('2023-03-25' as DATE) and DATE(NOW());
++-------+---------+--------+------------+
+| empid | name    | salary | start_Date |
++-------+---------+--------+------------+
+|     1 | kundan  | 600000 | 2023-03-28 |
+|     2 | satya   | 500000 | 2023-03-25 |
+|     3 | shubham | 400000 | 2023-03-24 |
++-------+---------+--------+------------+
+3 rows in set (0.02 sec)
+
+UC-6:-
+
+Ability to add Gender to Employee
+Payroll Table and Update the Rows to
+reflect the correct Employee Gender
+- Use payroll_service database in MSSQL Client
+- Use Alter Table Command to add Field gender after
+the name field
+- Use Update Query to set the gender using where
+condition with the employee name
+- E.g. UPDATE employee_payroll set gender =
+'M' where name = 'Bill' or name =
+'Charlie';
+
+
+mysql> alter table employee_payroll add column gender varchar(55) after name;
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from employee_payroll;
++-------+---------+--------+--------+------------+
+| empid | name    | gender | salary | start_Date |
++-------+---------+--------+--------+------------+
+|     1 | kundan  | NULL   | 600000 | 2023-03-28 |
+|     2 | satya   | NULL   | 500000 | 2023-03-25 |
+|     3 | shubham | NULL   | 400000 | 2023-03-24 |
++-------+---------+--------+--------+------------+
+3 rows in set (0.02 sec)
+
+mysql> update employee_payroll set gender = 'M' where name = 'kundan';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employee_payroll set gender = 'M' where name = 'satya';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employee_payroll set gender = 'M' where name = 'shubham';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employee_payroll;
++-------+---------+--------+--------+------------+
+| empid | name    | gender | salary | start_Date |
++-------+---------+--------+--------+------------+
+|     1 | kundan  | M      | 600000 | 2023-03-28 |
+|     2 | satya   | M      | 500000 | 2023-03-25 |
+|     3 | shubham | M      | 400000 | 2023-03-24 |
++-------+---------+--------+--------+------------+
+3 rows in set (0.00 sec)
+
+UC-7:-
+
+Ability to find sum, average, min, max
+and number of male and female
+employees
+- Use payroll_service database in MSSQL Client
+- Use Database Function SUM, AVG, MIN, MAX, COUNT
+to do analysis by Male or Female.
+- Note: You will need to use GROUP BY GENDER grouping to
+get the result
+- E.g. SELECT SUM(salary) FROM employee_payroll
+WHERE gender = 'F' GROUP BY gender;
+
+mysql> select SUM(salary) from employee_payroll where gender = "M" group by gender;
++-------------+
+| SUM(salary) |
++-------------+
+|     1500000 |
++-------------+
+1 row in set (0.02 sec)
+
+mysql> select AVG(salary) from employee_payroll where gender = "M" group by gender;
++-------------+
+| AVG(salary) |
++-------------+
+| 500000.0000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select MAX(salary) from employee_payroll where gender = "M" group by gender;
++-------------+
+| MAX(salary) |
++-------------+
+|      600000 |
++-------------+
+1 row in set (0.02 sec)
+
+mysql> select MIN(salary) from employee_payroll where gender = "M" group by gender;
++-------------+
+| MIN(salary) |
++-------------+
+|      400000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select count(salary) from employee_payroll where gender = "M" group by gender;
++---------------+
+| count(salary) |
++---------------+
+|             3 |
++---------------+
+1 row in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
