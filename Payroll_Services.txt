@@ -245,24 +245,128 @@ mysql> select count(salary) from employee_payroll where gender = "M" group by ge
 +---------------+
 1 row in set (0.00 sec)
 
+UC-8:- 
+
+Ability to extend employee_payroll data to store employee information like employee phone, address
+and department - Ensure employee department is non
+nullable fields.
+- Add Default Value for address field.
 
 
+mysql> alter table employee_payroll add emp_phone varchar(15);
+ERROR 2013 (HY000): Lost connection to MySQL server during query
+No connection. Trying to reconnect...
+Connection id:    9
+Current database: payroll_service
 
+Query OK, 0 rows affected (0.22 sec)
+Records: 0  Duplicates: 0  Warnings: 0
 
+mysql> alter table employee_payroll add Address varchar(55) default 'sheohar';
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
 
+mysql> alter table employee_payroll add department varchar(30) NOT NULL;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
 
+mysql> SELECT * FROM EMPLOYEE_PAYROLL;
++-------+---------+--------+--------+------------+-----------+---------+------------+
+| empid | name    | gender | salary | start_Date | emp_phone | Address | department |
++-------+---------+--------+--------+------------+-----------+---------+------------+
+|     1 | kundan  | M      | 600000 | 2023-03-28 | NULL      | sheohar |            |
+|     2 | satya   | M      | 500000 | 2023-03-25 | NULL      | sheohar |            |
+|     3 | shubham | M      | 400000 | 2023-03-24 | NULL      | sheohar |            |
++-------+---------+--------+--------+------------+-----------+---------+------------+
+3 rows in set (0.02 sec)
 
+UC-9:- 
+Ability to extend
+employee_payroll table
+to have Basic Pay,
+Deductions, Taxable Pay,
+Income Tax, Net Pay
 
+mysql> alter table employee_payroll add Basic_Pay varchar(30);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
 
+mysql> alter table employee_payroll add deductions varchar(30);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
 
+mysql> alter table employee_payroll add taxable_Pay varchar(30);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
 
+mysql> alter table employee_payroll add Income Tax varchar(30);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Tax varchar(30)' at line 1
+mysql> alter table employee_payroll add Income_Tax varchar(30);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
 
+mysql> alter table employee_payroll add Net_Pay varchar(30);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
 
+mysql> SELECT * FROM EMPLOYEE_PAYROLL;
++-------+---------+--------+--------+------------+-----------+---------+------------+-----------+------------+-------------+------------+---------+
+| empid | name    | gender | salary | start_Date | emp_phone | Address | department | Basic_Pay | deductions | taxable_Pay | Income_Tax | Net_Pay |
++-------+---------+--------+--------+------------+-----------+---------+------------+-----------+------------+-------------+------------+---------+
+|     1 | kundan  | M      | 600000 | 2023-03-28 | NULL      | sheohar |            | NULL      | NULL       | NULL        | NULL       | NULL    |
+|     2 | satya   | M      | 500000 | 2023-03-25 | NULL      | sheohar |            | NULL      | NULL       | NULL        | NULL       | NULL    |
+|     3 | shubham | M      | 400000 | 2023-03-24 | NULL      | sheohar |            | NULL      | NULL       | NULL        | NULL       | NULL    |
++-------+---------+--------+--------+------------+-----------+---------+------------+-----------+------------+-------------+------------+---------+
+3 rows in set (0.00 sec)
 
+UC-10:- 
+Ability to make one person as part of frontend and backend both the department.
 
+mysql> create table department (dept_id int primary key, dept_name varchar(55));
+Query OK, 0 rows affected (0.04 sec)
 
+mysql> insert into department(dept_id,dept_name) values(1,'frontend'),(2,'backend');
+Query OK, 2 rows affected (0.03 sec)
+Records: 2  Duplicates: 0  Warnings: 0
 
+mysql> select * from department;
++---------+-----------+
+| dept_id | dept_name |
++---------+-----------+
+|       1 | frontend  |
+|       2 | backend   |
++---------+-----------+
+2 rows in set (0.00 sec)
 
+UC-11:-
+For many to many relationship creating a junction table.
 
+mysql> create table employee_department(emp_id int NOT NULL,dept_id int NOT NULL, Foreign key(emp_id) REFERENCES employee_payroll(empid), Foreign key(dept_id) References department(dept_id));
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> insert into employee_department(emp_id,dept_id) values(1,1),(1,2);
+Query OK, 2 rows affected (0.02 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select * from employee_department;
++--------+---------+
+| emp_id | dept_id |
++--------+---------+
+|      1 |       1 |
+|      1 |       2 |
++--------+---------+
+2 rows in set (0.00 sec)
+
+UC-12:-
+Establish many to many relationship.
+
+mysql> Select employee_payroll.empid,employee_payroll.name,department.dept_id,department.dept_name From employee_payroll join employee_department ON (employee_department.emp_id = employee_payroll.empid) join department ON (department.dept_id = employee_department.dept_id);
++-------+--------+---------+-----------+
+| empid | name   | dept_id | dept_name |
++-------+--------+---------+-----------+
+|     1 | kundan |       1 | frontend  |
+|     1 | kundan |       2 | backend   |
++-------+--------+---------+-----------+
+2 rows in set (0.07 sec)
 
 
